@@ -7,7 +7,7 @@
 
 class ScannerEngine {
   public:
-    void addRule(const ScanRule& rule) { rules_.push_back(rule); }
+    void addRule(const ScanRule& rule) { rules_.push_back(std::move(rule)); }
 
     QVector<ScanResult> scan(const QString& data) const
     {
