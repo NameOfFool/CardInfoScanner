@@ -3,11 +3,10 @@
 
 #include "scan_rule.hpp"
 #include <QString>
-#include <QVector>
 
 class ScannerEngine {
   public:
-    void addRule(const ScanRule& rule) { rules_.push_back(std::move(rule)); }
+    void addRule(QString regex, ScanType type) { rules_.emplace_back(std::move(regex), type); }
 
     QVector<ScanResult> scan(const QString& data) const
     {

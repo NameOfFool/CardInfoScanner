@@ -3,9 +3,9 @@
 
 ScanRule::ScanRule(QString pattern, ScanType type) : pattern_(std::move(pattern)), type_(type) {}
 
-std::vector<ScanResult> ScanRule::apply(QString data) const
+QVector<ScanResult> ScanRule::apply(QString data) const
 {
-    std::vector<ScanResult> results;
+    QVector<ScanResult> results;
 
     for(const QRegularExpressionMatch& match : pattern_.globalMatch(data)) {
         Context ctx{data, match.capturedStart(), match.capturedLength()};

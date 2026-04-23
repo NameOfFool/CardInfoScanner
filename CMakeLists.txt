@@ -17,6 +17,8 @@ qt_add_executable(appcardsearcher
     include/scan_rule.hpp
     include/luhna_validator.hpp
     include/scanner_engine.hpp
+        src/backend.cpp
+        include/backend.hpp
 )
 
 qt_add_qml_module(appcardsearcher

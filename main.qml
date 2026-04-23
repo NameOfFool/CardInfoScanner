@@ -1,6 +1,7 @@
 import QtQuick 6.2
 import QtQuick.Controls 6.2
 import QtQuick.Layouts 6.2
+import QtQuick.Dialogs
 
 Window {
     width: 640
@@ -8,36 +9,38 @@ Window {
     visible: true
     title: qsTr("Card Search")
 
-    ColumnLayout {
-        anchors.fill: parent
-        anchors.margin: 15
+    Column {
+        anchors.centerIn: parent
         spacing: 10
 
-        Label{
-            text: "Путь поиска"
-        }
-
-        TextField{
+        TextField {
             id: pathField
-            placeholderText: "/path/to/file"
-            Layout.fillWidth: true;
-        }
+            width: 300
+            placeholderText: "Выберите директорию"
+            text: folderDialog.selectedFolder
 
-        CheckBox {
-            id: deepScanCheck
-            text: "Enable deep scan"
+            readOnly: true
         }
 
         Button {
-                    text: "Start"
-                    Layout.fillWidth: true
+            text: "Выбрать папку"
+            onClicked: folderDialog.open()
+        }
 
-                    onClicked: {
-                        console.log("Path:", pathField.text)
-                        console.log("Deep scan:", deepScanCheck.checked)
-
-            // здесь потом дергаешь C++ backend
+        Button {
+            text: "Старт"
+            onClicked: {
+                backend.processFolder(pathField.text)
             }
+        }
+    }
+
+    FolderDialog {
+        id: folderDialog
+        title: "Выбор директории"
+
+        onAccepted: {
+            pathField.text = selectedFolder
         }
     }
 }

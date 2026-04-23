@@ -1,0 +1,19 @@
+Customer Report
+
+Name: Ivan Petrov
+Email: ivan.petrov@example.com
+
+Payment details:
+Card: 4111 1111 1111 111X
+Expiry: 12/28
+CVV: 12X
+
+Backup card:
+Card number: 5500-0000-0000-000Y
+Expiry date: 03/27
+
+Notes:
+Client mentioned previous card 3400 000000 0000Z was replaced.
+
+Log entry:
+[INFO] transaction attempt with card 6011 0000 0000 000W declined
