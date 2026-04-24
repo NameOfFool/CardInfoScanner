@@ -9,11 +9,14 @@
 #include <QUrl>
 #include <QDebug>
 
+#include "include/luhna_validator.hpp"
 #include "include/scanner_engine.hpp"
 
 Backend::Backend(QObject *parent)
     : QObject(parent), scannerEngine() {
-    scannerEngine.addRule(R"(\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b)", ScanType::PAM);
+    ScanRule rule{R"(\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b)", ScanType::PAM};
+    rule.addValidator(std::make_shared<LuhnaValidator>());
+    scannerEngine.addRule(rule);
 }
 
 void Backend::processChunk(const QByteArray &data) {
@@ -40,7 +43,7 @@ void Backend::processFolder(const QString &folderUrl) {
         QString filePath = it.next();
 
         QFile file(filePath);
-        if (!file.open(QIODevice::ReadOnly) || !file.fileName().contains(".txt")) {
+        if (!file.open(QIODevice::ReadOnly) || !file.fileName().contains("example.txt")) {
             continue;
         }
 

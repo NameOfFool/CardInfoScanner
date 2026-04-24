@@ -6,7 +6,7 @@
 
 class ScannerEngine {
   public:
-    void addRule(QString regex, ScanType type) { rules_.emplace_back(std::move(regex), type); }
+    void addRule(ScanRule& scanRule) { rules_.push_back(std::move(scanRule)); }
 
     QVector<ScanResult> scan(const QString& data) const
     {

@@ -17,3 +17,5 @@ Client mentioned previous card 3400 000000 0000Z was replaced.
 
 Log entry:
 [INFO] transaction attempt with card 6011 0000 0000 000W declined
+
+Test card: 4539578763621486 fake: 1234567890123456

@@ -21,7 +21,7 @@ class Validator {
     }
 
   public:
-    Validator(QString name, double score, QString description_) {}
+    Validator(QString name, double score, QString description):name_(std::move(name)), score_(score), description_(std::move(description)) {}
     inline QString getName() const { return name_; }
 
     inline QString getDescription() const { return description_; };

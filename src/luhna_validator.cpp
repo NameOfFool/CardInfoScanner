@@ -1,4 +1,5 @@
 #include "../include/luhna_validator.hpp"
+#include <QDebug>
 
 LuhnaValidator::LuhnaValidator() : Validator("luhna", 0.5, "Поиск номера по алгоритму Луна") {
 }
