@@ -15,12 +15,12 @@ class Backend : public QObject {
 public:
     explicit Backend(QObject* parent = nullptr);
 
-    Q_INVOKABLE void processFolder(const QString& folderUrl);
+    Q_INVOKABLE void processFolder(const QString& folderUrl, const QString& filesType);
 
 private:
     ScannerEngine scannerEngine;
 
-    void processChunk(const QByteArray &data);
+    void processChunk(const QByteArray &data, const QString& name);
 };
 
 

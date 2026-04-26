@@ -14,11 +14,11 @@ private:
     ScanType type_;
 
 public:
-    ScanRule(QString pattern, ScanType type);
+    ScanRule(const QString &pattern, ScanType type);
 
     inline void addValidator(std::shared_ptr<Validator> validator) { validators_.push_back(std::move(validator)); }
 
-    QVector<ScanResult> apply(QString data) const;
+    QVector<ScanResult> apply(const QString &data) const;
 };
 
 #endif // SCANRULE_HPP

@@ -19,21 +19,28 @@ Backend::Backend(QObject *parent)
     scannerEngine.addRule(rule);
 }
 
-void Backend::processChunk(const QByteArray &data) {
-    QString text = QString::fromUtf8(data);
+void Backend::processChunk(const QByteArray &data, const QString& name) {
+    const QString text = QString::fromUtf8(data);
 
     auto result = scannerEngine.scan(text);
-
-    for (const auto& r : result) {
+    QFile file("output.txt");
+    for (const auto &r: result) {
         qDebug() << r.match;
+
+        if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            QTextStream out(&file);
+            out << name << ": " << r.match << Qt::endl;
+
+        }
     }
+    file.close();
 }
 
-void Backend::processFolder(const QString &folderUrl) {
+void Backend::processFolder(const QString &folderUrl, const QString &filesType) {
     // Парсинг file:///
-    QString path = QUrl(folderUrl).toLocalFile();
+    const QString path = QUrl(folderUrl).toLocalFile();
 
-    qDebug() << "Scanning:" << path;
+    qDebug() << "Scanning:" << path << ", searching for " << filesType;
 
     QDirIterator it(path,
                     QDir::Files,
@@ -43,7 +50,7 @@ void Backend::processFolder(const QString &folderUrl) {
         QString filePath = it.next();
 
         QFile file(filePath);
-        if (!file.open(QIODevice::ReadOnly) || !file.fileName().contains("example.txt")) {
+        if (!file.open(QIODevice::ReadOnly) || !file.fileName().contains(filesType)) {
             continue;
         }
 
@@ -57,7 +64,7 @@ void Backend::processFolder(const QString &folderUrl) {
             buffer = file.read(chunkSize);
 
             // Здесь анализ чанка
-            processChunk(buffer);
+            processChunk(buffer, filePath);
         }
     }
     qDebug() << "Finished";
