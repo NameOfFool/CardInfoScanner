@@ -5,10 +5,8 @@
 #include <QRegularExpression>
 #include <memory>
 #include <vector>
-#include <QVector>
 
 class ScanRule {
-private:
     std::vector<std::shared_ptr<Validator> > validators_;
     QRegularExpression pattern_;
     ScanType type_;
@@ -16,7 +14,7 @@ private:
 public:
     ScanRule(const QString &pattern, ScanType type);
 
-    inline void addValidator(std::shared_ptr<Validator> validator) { validators_.push_back(std::move(validator)); }
+    void addValidator(std::shared_ptr<Validator> validator) { validators_.push_back(std::move(validator)); }
 
     QVector<ScanResult> apply(const QString &data) const;
 };

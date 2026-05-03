@@ -3,7 +3,6 @@
 
 #include <QString>
 #include <QVector>
-#include <cstddef>
 
 // Структура контекста поиска. Содержит текст, где найдено совпадение, позицию и длину совпадения
 struct Context {

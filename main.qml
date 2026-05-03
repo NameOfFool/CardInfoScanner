@@ -9,7 +9,6 @@ Window {
     height: 480
     visible: true
     title: qsTr("Card Search")
-    color:"#ADD8E6"
 
     QtObject {
         id: filetype
@@ -37,7 +36,7 @@ Window {
         Button {
             text: "Старт"
             onClicked: {
-                backend.processFolder(pathField.text, filetype.tyle)
+                backend.processFolder(pathField.text, filesTypeBox.currentValue)
             }
         }
 
@@ -50,13 +49,6 @@ Window {
             ]
             textRole: "text"
             valueRole: "value"
-            onAccepted: {
-                if (find(editText) === -1)
-                    model.append({text: editText})
-            }
-            // Set currentValue to the value stored in the backend.
-
-            // When an item is selected, update the backend.
             onActivated: filetype.type = currentValue
         }
     }
@@ -67,6 +59,29 @@ Window {
 
         onAccepted: {
             pathField.text = selectedFolder
+        }
+    }
+
+    Popup {
+        id: finishedPopup
+        modal: true
+        focus: true
+        anchors.centerIn: parent
+
+        width: 200
+        height: 100
+
+        Label {
+            anchors.centerIn: parent
+            text: "Сканирование завершено"
+        }
+    }
+
+    Connections {
+        target: backend
+
+        function onScanningFinished() {
+            finishedPopup.open();
         }
     }
 }

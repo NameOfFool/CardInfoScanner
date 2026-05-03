@@ -1,27 +1,23 @@
-//
-// Created by fool on 24.04.2026.
-//
-
-#include "../include/backend.hpp"
-
-
+#include "include/backend.hpp"
 #include <QDirIterator>
 #include <QUrl>
 #include <QDebug>
 
+#include "include/image_scanner_parser.hpp"
 #include "include/luhna_validator.hpp"
 #include "include/scanner_engine.hpp"
+#include "include/text_scanner_parser.hpp"
 
 Backend::Backend(QObject *parent)
-    : QObject(parent), scannerEngine() {
+    : QObject(parent) {
     ScanRule rule{R"(\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b)", ScanType::PAM};
     rule.addValidator(std::make_shared<LuhnaValidator>());
     scannerEngine.addRule(rule);
+    parsers[".txt"] = std::make_unique<TextScannerParser>();
+    parsers[".png"] = std::make_unique<ImageScannerParser>();
 }
 
-void Backend::processChunk(const QByteArray &data, const QString& name) {
-    const QString text = QString::fromUtf8(data);
-
+void Backend::processChunk(const QString &text, const QString &name) const {
     auto result = scannerEngine.scan(text);
     QFile file("output.txt");
     for (const auto &r: result) {
@@ -30,7 +26,6 @@ void Backend::processChunk(const QByteArray &data, const QString& name) {
         if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
             QTextStream out(&file);
             out << name << ": " << r.match << Qt::endl;
-
         }
     }
     file.close();
@@ -50,22 +45,26 @@ void Backend::processFolder(const QString &folderUrl, const QString &filesType) 
         QString filePath = it.next();
 
         QFile file(filePath);
-        if (!file.open(QIODevice::ReadOnly) || !file.fileName().contains(filesType)) {
+        const auto fileType = getFileType(file);
+        if (!file.open(QIODevice::ReadOnly) || !fileType.contains(filesType) || parsers.find(fileType) == parsers.
+            end()) {
+            qDebug() << "Skipping" << filePath;
             continue;
         }
+        const auto parser = parsers.at(fileType);
 
         qDebug() << "Reading:" << file.fileName();
+        file.close();
 
-        // 64 KB
-        const qint64 chunkSize = 64 * 1024;
-        QByteArray buffer;
-
-        while (!file.atEnd()) {
-            buffer = file.read(chunkSize);
-
-            // Здесь анализ чанка
-            processChunk(buffer, filePath);
-        }
+        parser->parseFile(filePath, [this](auto text, auto name) {
+            return processChunk(text, name);
+        });
     }
     qDebug() << "Finished";
+    emit scanningFinished();
+}
+
+QString Backend::getFileType(const QFile &file) {
+    const QFileInfo fileInfo(file.fileName());
+    return "." + fileInfo.suffix();
 }

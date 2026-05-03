@@ -2,7 +2,6 @@
 #define SCANNER_ENGINE_HPP
 
 #include "scan_rule.hpp"
-#include <QString>
 
 class ScannerEngine {
   public:
