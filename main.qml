@@ -9,6 +9,7 @@ Window {
     height: 480
     visible: true
     title: qsTr("Card Search")
+    color:"#ADD8E6"
 
     QtObject {
         id: filetype
@@ -44,7 +45,7 @@ Window {
             id: filesTypeBox
             model: [
                 { text: "txt", value: ".txt"},
-                { text: "docx", value: ".docx" },
+                { text: "png", value: ".png" },
                 { text: "Все", value: "." }
             ]
             textRole: "text"
