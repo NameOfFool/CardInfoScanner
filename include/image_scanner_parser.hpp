@@ -20,10 +20,12 @@ public:
         api.SetImage(image);
 
         const char *outText = api.GetUTF8Text();
-        QString result(outText);
+        const QString result(outText);
 
         delete[] outText;
         pixDestroy(&image);
+
+        onParsed(result, filePath);
     }
 };
 
